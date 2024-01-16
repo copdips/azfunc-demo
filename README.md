@@ -8,6 +8,12 @@
 
 - <https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad>
 
+- verify JWT token : <https://github.com/Azure-Samples/ms-identity-python-webapi-azurefunctions/blob/master/Function/secureFlaskApp/__init__.py>
+
+- verify JWT token (this one has cache on getting openid config and jwk keys): <https://github.com/GeneralMills/azure-ad-token-verify>
+
+- request headers auto injected by Azure App Service (not for azfunc): <https://learn.microsoft.com/en-us/azure/app-service/configure-authentication-user-identities#access-user-claims-in-app-code>
+
 ## Demo: Deploy serverless APIs with Azure Functions, Logic Apps, and Azure SQL Database
 
 <https://learn.microsoft.com/en-us/training/modules/deploy-backend-apis/>
@@ -74,7 +80,9 @@ Premium plan: <https://learn.microsoft.com/en-us/azure/azure-functions/functions
                     f"Blob Size: {myblob.length} bytes")
     ```
 
-    > `source` param in `@app.blob_trigger()`: Sets the source of the triggering event. **Use EventGrid for an Event Grid-based blob trigger, which provides much lower latency**. The default is `LogsAndContainerScan` polling system not push, which uses the **standard polling** mechanism to detect changes in the container. See below Low latency Blob trigger using Event Grid for more information.
+    > [!WARNING]
+    > [Official doc](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob-trigger?tabs=python-v2%2Cisolated-process%2Cnodejs-v4&pivots=programming-language-python#decorators) says: `source` param in `@app.blob_trigger()`: Sets the source of the triggering event. **Use EventGrid for an Event Grid-based blob trigger, which provides much lower latency**. The default is `LogsAndContainerScan` polling system not push, which uses the **standard polling** mechanism to detect changes in the container. See below Low latency Blob trigger using Event Grid for more information.
+    **After test, the default trigger seems to be EventGrid but not `LogsAndContainerScan`**.
 
 - Low latency Blob trigger using Event Grid:
     1. <https://learn.microsoft.com/en-us/azure/azure-functions/functions-event-grid-blob-trigger?tabs=isolated-process%2Cnodejs-v4&pivots=programming-language-python>
@@ -128,9 +136,10 @@ func azure functionapp publish az-func-name
 ```
 
 <details>
-  <summary>Click to expand `func azure functionapp publish` output</summary>
 
-  ```bash
+<summary>Click to expand `func azure functionapp publish` output</summary>
+
+```bash
     Getting site publishing info...
     [2024-01-07T11:37:03.106Z] Starting the function app deployment...
     Creating archive for current directory...
@@ -212,7 +221,8 @@ func azure functionapp publish az-func-name
     Triggering recycle (preview mode disabled).
     Deployment successful. deployer = Push-Deployer deploymentPath = Functions App ZipDeploy. Extract zip. Remote build.
     Remote build succeeded!
-  ```
+```
+
 </details>
 
 ## Test
